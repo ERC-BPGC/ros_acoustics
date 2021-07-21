@@ -30,9 +30,7 @@ install(DIRECTORY
 
 # install python scripts
 set(python_scripts
-  scripts/srv_compute_rir.py
   scripts/srv_compute_waveforms.py
-  test/cli_compute_rir.py  
   test/cli_compute_waveforms.py
 )
 install(PROGRAMS
@@ -49,7 +47,6 @@ set(msg_files
   msg/FloatArray.msg
 )
 set(srv_files
-  srv/ComputeRIR.srv
   srv/ComputeWaveforms.srv
 )
 
