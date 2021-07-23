@@ -13,6 +13,7 @@ robot.getPoseFromGazebo()
 # retrieves the simulated waveform
 robot.getWaveform()
 
+# plt.ion()
 # interactive pyplot
 robot.plotWaveform()
 

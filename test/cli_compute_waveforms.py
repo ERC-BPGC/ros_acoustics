@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import sys
+print(sys.path)
 from ros_acoustics.srv import ComputeWaveforms
 
 import rclpy

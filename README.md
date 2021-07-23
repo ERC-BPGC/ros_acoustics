@@ -6,4 +6,4 @@
 2. Clone this repo inside your `src` folder.
 3. Go to the top workspace directory and build using `colcon build --packages-select ros_acoustics`
 4. Source the workspace: `source install/local_setup.bash`
-5. To run the basic test: `ros2 launch ros_acoustics basic_test_launch.py`
+5. To run the basic test: `ros2 launch ros_acoustics basic_test_launch.py`  
