@@ -1,19 +1,18 @@
-import ros_acoustics.robot as robot
-robot = Robot
+#!/usr/bin/env python3
+from ros_acoustics.robot import Robot
+import rclpy
 
-robot.init() # loads PRA service and rviz components
+def main(args=None):
+	rclpy.init(args=None)
 
-# sets the pose of the robot and updates rviz
-robot.setPose(pos=[2, 1, 1], ori=[2, 1, 3, 2])
+	robot = Robot()
+	robot.set_pose([1., 0.075, 0.075], [0,0,0])
+	robot.publish_pose()
 
-# OR
-robot.getPoseFromGazebo()
+	rclpy.spin(robot)
 
-# sends the current robot pose to PRA service and
-# retrieves the simulated waveform
-robot.getWaveform()
+	robot.destroy_node()
+	rclpy.shutdown()
 
-# plt.ion()
-# interactive pyplot
-robot.plotWaveform()
-
+if __name__ == '__main__':
+	main()

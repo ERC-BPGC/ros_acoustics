@@ -3,7 +3,6 @@ import sys
 print(sys.path)
 from ros_acoustics.srv import ComputeWaveforms
 
-from ros_acoustics.robot import Robot
 import rclpy
 from rclpy.node import Node
 import numpy as np
@@ -49,10 +48,6 @@ class BasicComputeWaveformsClient(Node):
 
 def main(args=None):
 	rclpy.init(args=None)
-
-	robot = Robot
-	robot.set_pose([1., 0.075, 0.075], [0,0,0])
-	robot.publish_pose()
 
 	waveforms_client = BasicComputeWaveformsClient()
 

@@ -32,6 +32,7 @@ install(DIRECTORY
 set(python_scripts
   scripts/srv_compute_waveforms.py
   test/cli_compute_waveforms.py
+  test/test_robot.py
 )
 install(PROGRAMS
   ${python_scripts}
