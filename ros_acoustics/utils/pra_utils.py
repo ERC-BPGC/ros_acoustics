@@ -1,5 +1,6 @@
 import numpy as np
 import pyroomacoustics as pra
+from pyroomacoustics import room
 import yaml
 import pprint as pp
 from stl import mesh
@@ -28,6 +29,29 @@ def room_to_stl(room: pra.Room, outpath: str) -> None:
 			break
 	# print(room_mesh.is_closed())
 	room_mesh.save(outpath)
+
+def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
+	# TODO: Other room params like fs in args/kwargs?
+	material = pra.Material(0.5, None) if material is None else material
+
+	room_mesh = mesh.Mesh.from_file(path_to_stl)
+	ntriang = room_mesh.vectors.shape[0]
+	scale_factor = 1.0	# TODO: as arg/kwarg?
+
+	walls = []
+	for i in range(ntriang):
+		walls.append(
+			pra.wall_factory(
+				room_mesh.vectors[i].T * scale_factor,
+				material.energy_absorption['coeffs'],
+				material.scattering['coeffs'],
+			)
+		)
+
+	room = pra.Room(walls, fs=16000, max_order=4, ray_tracing=False)
+
+	return room
+
 
 def load_room(inpath):
 	with open(inpath, 'r') as file:
