@@ -1,18 +1,39 @@
-import ros_acoustics.robot as robot
-robot = Robot
+#!/usr/bin/env python3
+from ros_acoustics.robot import Robot
+import rclpy
+from visualization_msgs.msg import Marker
 
-robot.init() # loads PRA service and rviz components
+def main(args=None):
+	rclpy.init(args=None)
 
-# sets the pose of the robot and updates rviz
-robot.setPose(pos=[2, 1, 1], ori=[2, 1, 3, 2])
+	# publish_stl('test/data/simple_pipe.stl')
 
-# OR
-robot.getPoseFromGazebo()
+	robot = Robot()
+	robot.set_pose([1., 0.075, 0.075], [0,0,0])
+	robot.publish_pose()
 
-# sends the current robot pose to PRA service and
-# retrieves the simulated waveform
-robot.getWaveform()
+	rclpy.spin(robot)
 
-# interactive pyplot
-robot.plotWaveform()
+	robot.destroy_node()
+	rclpy.shutdown()
 
+def publish_stl(path_to_stl):
+	m = Marker()
+	m.pose.position.x = 0
+	m.pose.position.y = 0
+	m.pose.position.z = 0
+	m.pose.orientation.x = 0
+	m.pose.orientation.y = 0
+	m.pose.orientation.z = 0
+	m.pose.orientation.w = 1.0
+	m.type = Marker.MESH_RESOURCE
+	m.scale.x = m.scale.y = m.scale.z = 1.
+	m.action = Marker.ADD
+	m.id = 42
+	m.color.a = 0.6
+	m.color.r = 0.1
+	m.color.g = 0.2
+	m.color.b = 0.75
+
+if __name__ == '__main__':
+	main()

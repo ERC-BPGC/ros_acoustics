@@ -1,6 +1,7 @@
 import sys
-sys.path.append('.')
+
 from utils.pra_utils import *
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pyroomacoustics as pra

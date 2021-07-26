@@ -1,7 +1,103 @@
-import matplotlib.pyplot as plt
 import numpy as np
-from numpy.lib.arraysetops import isin
 import pyroomacoustics as pra
+import yaml
+import pprint as pp
+from stl import mesh
+
+## file utils
+
+def room_to_stl(room: pra.Room, outpath: str) -> None:
+	"""Converts a pyroomacoustics room object into an stl file
+
+	Args:
+		room (pyroomacoustics.Room): [description]
+		outpath (string): Path of the outputted stl file
+	"""
+	num_walls = len(room.walls)
+	room_mesh = mesh.Mesh(np.zeros(num_walls*2, dtype=mesh.Mesh.dtype))
+	print(num_walls)
+	for widx, wall in enumerate(room.walls):
+		corners = wall.corners.T
+		room_mesh.vectors[2*widx] = np.array([
+			corners[0], corners[1], corners[2]
+		])
+		room_mesh.vectors[2*widx+1] = np.array([
+			corners[0], corners[2], corners[3]
+		])
+		if widx >= 8:
+			break
+	# print(room_mesh.is_closed())
+	room_mesh.save(outpath)
+
+def load_room(inpath):
+	with open(inpath, 'r') as file:
+		# get room dict
+		rdin = yaml.load(file, Loader=yaml.FullLoader)
+	
+	walls = []
+	for w in rdin['walls']:
+		# TODO: checks for value and type of attributes
+		wcorners = np.array(w['corners']).T
+		mat = pra.Material(w['material']['absorption'], w['material']['scattering'])
+
+		walls.append(
+			pra.wall_factory(
+				wcorners,
+				mat.energy_absorption['coeffs'],
+				mat.scattering['coeffs']
+			)
+		)
+
+	room = pra.Room(walls,
+					fs=rdin['fs'],
+					max_order=rdin['max_order'],
+					air_absorption=rdin['air_absorption'],
+					ray_tracing=rdin['ray_tracing']	
+				)
+	
+	return room
+
+def dump_room(room, outpath):
+	"""TODO: Docstring"""
+	rd = create_room_dict(room)
+	with open(outpath, 'w') as file:
+		yaml.dump(rd, file, default_flow_style=False, sort_keys=False)
+	
+	print('Done creating YAML dump.')
+
+def print_room(room):
+	"""Nicely prints details ab pra.Room object"""
+	pp.pprint(create_room_dict(room), sort_dicts=False)
+
+def create_room_dict(room: pra.Room): 
+	rd = dict()     # room_dict
+	rd['ray_tracing'] = room.simulator_state['rt_needed']
+	rd['air_absorption'] = room.simulator_state['air_abs_needed']
+	rd['max_order'] = room.max_order
+	rd['fs'] = room.fs
+
+	rd['walls'] = []
+	for widx, wall in enumerate(room.walls):
+		wd = dict() # dict for a single wall
+		wd['id'] = widx
+		wd['material'] = {
+			'absorption': float(wall.absorption[0]),
+			'scattering': float(wall.scatter[0]) if wall.scatter > 0 else None
+		}
+		
+		# TODO: How to determine normal is reversed
+		# wd['reverse_normal'] = False
+
+		corners = wall.corners.T.tolist()
+		wd['corners'] = []
+		for corner in corners:
+			wd['corners'].append(corner)
+
+		rd['walls'].append(wd)
+
+	return rd
+
+## room utils
 
 def create_walls(obstacle_faces, materials):
 	"""Returns a list of Wall objects that can be used in the Room constructor
