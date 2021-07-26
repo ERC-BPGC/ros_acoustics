@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from ros_acoustics.srv import ComputeWaveforms
+"""
+Simple test script that tests the functionality of the WaveformClient class
+"""
 
+from ros_acoustics.srv import ComputeWaveforms
 from ros_acoustics.waveform_client import WaveformClient
 import rclpy
 from rclpy.node import Node

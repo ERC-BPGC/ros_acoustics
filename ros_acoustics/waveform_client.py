@@ -7,7 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class WaveformClient(Node):
-	"""TODO: description"""
+	"""
+	Class that handles sending and receiving requests from the 
+	compute waveforms service
+	"""
 	srv_name = 'compute_waveforms'
 	
 	def __init__(self):
@@ -21,6 +24,17 @@ class WaveformClient(Node):
 		self.req = ComputeWaveforms.Request()
 
 	def get_waveform(self, source_pos, mic_pos, source_wav):
+		"""(Warning: this function blocks i think!) Returns the simulated waveform
+		obtained from compute waveforms service
+
+		Args:
+			source_pos (list of shape (3,)): position of sound source
+			mic_pos (list of shape (3,)): position of microphone
+			source_wav (1D list): waveform emitted by sound source
+
+		Returns:
+			list: simulated waveform
+		"""
 		self.send_request(source_pos, mic_pos, source_wav)
 		rclpy.spin_until_future_complete(self, self.future)
 
