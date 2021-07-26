@@ -9,11 +9,11 @@ from visualization_msgs.msg import Marker
 class RoomPublisher(Node):
     """Class that publishes the marker for a room"""
     topic = 'room_marker'
-    path_to_mesh = '/home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/simple_pipe.stl'
+    path_to_mesh = 'file:///home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/simple_pipe.stl'
 
     def __init__(self):
         super().__init__('room_publisher')
-        self.pub = self.create_publisher(Marker, self.topic, 1)
+        self.pub = self.create_publisher(Marker, self.topic, 2)
         self.marker = self._init_basic_marker()
         self.marker.mesh_resource = self.path_to_mesh
 
@@ -23,14 +23,15 @@ class RoomPublisher(Node):
     def _init_basic_marker(self):
         """Returns basic marker"""
         m = Marker()
-        m = Marker()
-        m.pose.position.x = 0
-        m.pose.position.y = 0
-        m.pose.position.z = 0
-        m.pose.orientation.x = 0
-        m.pose.orientation.y = 0
-        m.pose.orientation.z = 0
-        m.pose.orientation.w = 1.0
+        m.header.frame_id = "map"
+        m.header.stamp = self.get_clock().now().to_msg()
+        m.pose.position.x = 0.
+        m.pose.position.y = 0.
+        m.pose.position.z = 0.
+        m.pose.orientation.x = 1.
+        m.pose.orientation.y = 0.
+        m.pose.orientation.z = 0.
+        m.pose.orientation.w = 0.
         m.type = Marker.MESH_RESOURCE
         m.scale.x = m.scale.y = m.scale.z = 1.
         m.action = Marker.ADD
