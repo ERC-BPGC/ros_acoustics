@@ -17,8 +17,8 @@ from mpl_toolkits import mplot3d as a3
 import os
 
 def main():
-	if len(sys.argv) != 2:
-		print('Path to mesh file required as argument. Exiting.')
+	if len(sys.argv) != 3:
+		print('Need 2 args - path to mesh existing mesh file, and path of outputted rcf. Exiting.')
 		return
 
 	# clarify the user with the cwd
@@ -26,6 +26,7 @@ def main():
 	print('Current working directory: ' + os.getcwd())
 
 	path_to_stl = sys.argv[1]
+	path_to_rcf = sys.argv[2]
 
 	# check extension of input mesh file
 	if path_to_stl.split('.')[1].lower() != 'stl':
@@ -33,6 +34,8 @@ def main():
 		return 
 
 	# obtain default wall material coefficients
+	print('Enter the default values for wall parameters:')
+	# def_absorp = get_default_param('absorption')
 	default_material = pra.Material(0.5, None)
 
 	try:
@@ -43,46 +46,68 @@ def main():
 	except:
 		print('Unknown error.')
 		return
-	
+
+	# disp_help_message()
 
 	plt.ion()
 	for wall in room.walls:
 		widx = int(wall.name.split('_')[1])
 		
 		pra_utils.plot_room(room, highlight_wall=widx, wireframe=False, interactive=True)
-		
-		absorption = input(f'Enter energy absorption for {wall.name}: ')
-		if absorption.strip() == "":
-			print(
-				f'Assigning default energy absorption '
-				f'({default_material.absorption_coeffs})'
-				f' for wall {wall.name}'
-			)
-			absorption = default_material.absorption_coeffs[0]
-		else:
-			try:
-				absorption = float(absorption)
-				if not(0.0 < absorption < 1.0):
-					raise ValueError
-			except:
-				print(
-				f'Invalid value! Assigning default energy absorption '
-				f'({default_material.absorption_coeffs})'
-				f' for wall {wall.name}'
-				)
+
+		# ask user for values for wall
+		absorption = get_wall_param(wall.name, 'energy_absorption', 0.5)
+		scattering = get_wall_param(wall.name, 'scattering', None)
 		wall = pra.wall_factory(
 			wall.corners,
 			[absorption],
-			default_material.scattering_coeffs,
+			[scattering],
 			name=wall.name
 		)
 	
-	pra_utils.dump_room(room, 'testconvert.yaml')
+	print(f'Saving file to {path_to_rcf}')
+	pra_utils.dump_room(room, path_to_rcf)
 
-	room = pra_utils.load_room('testconvert.yaml')
-	plt.ioff()
-	room.plot()
-	plt.show()
+	test = input('Would you like to load the rcf for testing? (y/n)')
+	test = True if test == 'y' else False
+
+	if test:
+		print('Loading rcf for testing...')
+		room = pra_utils.load_room(path_to_rcf)
+		plt.ioff()
+		room.plot()
+		plt.show()
+	else:
+		print('Test aborted')
+
+	print('Done. Exiting.')
+
+def get_wall_param(wall_name: str, param_name: str, default_value: float):
+	p = input(f'Enter {param_name} for {wall_name}: ')
+
+	# if user presses enter, use default value
+	if p.strip() == "":
+		print(
+			f'Assigning default {param_name} '
+			f'({default_value})'
+			f' for {wall_name}'
+		)
+		p = default_value
+	else:
+		try:
+			p = float(p)
+			if not(0.0 < p < 1.0):
+				raise ValueError
+		except:
+			print(
+			f'Invalid value! Assigning default {param_name} '
+			f'({default_value})'
+			f' for {wall_name}'
+			)
+			p = default_value
+
+	return p
+	
 
 if __name__ == "__main__":
 	main()
