@@ -18,6 +18,7 @@ import os
 
 def main():
 	if len(sys.argv) != 3:
+		# TODO: display help message 
 		print('Need 2 args - path to mesh existing mesh file, and path of outputted rcf. Exiting.')
 		return
 
@@ -33,8 +34,8 @@ def main():
 		print('Currently only STL files supported. Exiting. ')
 		return 
 
-	# obtain default wall material coefficients
-	print('Enter the default values for wall parameters:')
+	# TODO: obtain default wall material coefficients
+	# print('Enter the default values for wall parameters:')
 	# def_absorp = get_default_param('absorption')
 	default_material = pra.Material(0.5, None)
 
@@ -47,9 +48,10 @@ def main():
 		print('Unknown error.')
 		return
 
-	# disp_help_message()
+	# TODO: guide for ux
+	# disp_guide_message()
 
-	plt.ion()
+	plt.ion() # TODO: close plot after for loop
 	for wall in room.walls:
 		widx = int(wall.name.split('_')[1])
 		
@@ -69,9 +71,8 @@ def main():
 	pra_utils.dump_room(room, path_to_rcf)
 
 	test = input('Would you like to load the rcf for testing? (y/n)')
-	test = True if test == 'y' else False
 
-	if test:
+	if test == 'y':
 		print('Loading rcf for testing...')
 		room = pra_utils.load_room(path_to_rcf)
 		plt.ioff()
@@ -83,6 +84,17 @@ def main():
 	print('Done. Exiting.')
 
 def get_wall_param(wall_name: str, param_name: str, default_value: float):
+	"""Helper function to obtain a parameter from a user. Returns user entered value
+	only if it is a valid float within (0,1), otherwise returns default_value
+
+	Args:
+		wall_name (str): Name of parameter's parent wall
+		param_name (str): Name of parameter
+		default_value (float): Value assigned if user gives invalid/skips
+
+	Returns:
+		[float]: Value of the parameter
+	"""
 	p = input(f'Enter {param_name} for {wall_name}: ')
 
 	# if user presses enter, use default value
