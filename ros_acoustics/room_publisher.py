@@ -13,9 +13,12 @@ class RoomPublisher(Node):
 
     def __init__(self):
         super().__init__('room_publisher')
+        
         self.pub = self.create_publisher(Marker, self.topic, 2)
         self.marker = self._init_basic_marker()
         self.marker.mesh_resource = self.path_to_mesh
+
+        self.get_logger().info('Initiated room publisher')
 
     def publish_room(self):
         self.pub.publish(self.marker)
