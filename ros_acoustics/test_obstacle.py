@@ -1,6 +1,6 @@
 import sys
 
-from utils.pra_utils import *
+from ros_acoustics.utils.pra_utils import *
 
 import matplotlib.pyplot as plt
 import numpy as np
