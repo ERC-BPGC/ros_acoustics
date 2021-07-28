@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from mpl_toolkits import mplot3d as a3
 
+# TODO: make a subclass of Room with all these functions
+
 ## file utils
 
 def room_to_stl(room: pra.Room, outpath: str) -> None:
@@ -35,13 +37,12 @@ def room_to_stl(room: pra.Room, outpath: str) -> None:
 	# print(room_mesh.is_closed())
 	room_mesh.save(outpath)
 
-def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
+def stl_to_room(path_to_stl: str, material: pra.Material = None, scale_factor: float = 1.0) -> pra.Room:
 	# TODO: Other room params like fs in args/kwargs?
 	material = pra.Material(0.5, None) if material is None else material
 
 	room_mesh = mesh.Mesh.from_file(path_to_stl)
 	ntriang = room_mesh.vectors.shape[0]
-	scale_factor = 1.0	# TODO: as arg/kwarg?
 
 	walls = []
 	for i in range(ntriang):

@@ -39,8 +39,10 @@ def main():
 	# def_absorp = get_default_param('absorption')
 	default_material = pra.Material(0.5, None)
 
+	scale_factor = float(input('Input scale factor: '))
+
 	try:
-		room = pra_utils.stl_to_room(path_to_stl, default_material)
+		room = pra_utils.stl_to_room(path_to_stl, default_material, scale_factor)
 	except FileNotFoundError:
 		print('Could not find mesh file: ' + path_to_stl + '. Exiting.')
 		return
@@ -50,11 +52,13 @@ def main():
 
 	# TODO: guide for ux
 	# disp_guide_message()
+	print(f'There are {len(room.walls)} walls. ')
 
 	plt.ion() # TODO: close plot after for loop
 	for wall in room.walls:
 		widx = int(wall.name.split('_')[1])
 		
+		# TODO: don't keep changing camera angle of view
 		pra_utils.plot_room(room, highlight_wall=widx, wireframe=False, interactive=True)
 
 		# ask user for values for wall
