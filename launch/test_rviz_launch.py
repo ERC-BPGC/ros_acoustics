@@ -13,5 +13,5 @@ def generate_launch_description():
 		executable='test_robot.py',
 	)
 
-	return LaunchDescription([rviz_node, some_node])
+	return LaunchDescription([rviz_node, robot_node])
 

@@ -9,11 +9,11 @@ from visualization_msgs.msg import Marker
 class RoomPublisher(Node):
     """Class that publishes the marker for a room"""
     topic = 'room_marker'
-    path_to_mesh = 'file:///home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/simple_pipe.stl'
+    path_to_mesh = 'file:///home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/t_pipe.stl'
 
     def __init__(self):
         super().__init__('room_publisher')
-        
+
         self.pub = self.create_publisher(Marker, self.topic, 2)
         self.marker = self._init_basic_marker()
         self.marker.mesh_resource = self.path_to_mesh
@@ -36,7 +36,7 @@ class RoomPublisher(Node):
         m.pose.orientation.z = 0.
         m.pose.orientation.w = 0.
         m.type = Marker.MESH_RESOURCE
-        m.scale.x = m.scale.y = m.scale.z = 1.
+        m.scale.x = m.scale.y = m.scale.z = .001
         m.action = Marker.ADD
         m.id = 42
         m.color.a = 0.6
