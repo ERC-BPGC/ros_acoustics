@@ -58,9 +58,18 @@ def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
 
 	return room
 
-def plot_room(room: pra.Room, wireframe=False, highlight_wall: int = None) -> None:
-	fig = plt.figure()
-	ax = a3.Axes3D(fig)
+def plot_room(room: pra.Room, wireframe=False, highlight_wall: int = None, interactive=False) -> None:
+	firsttime = False
+	if not hasattr(plot_room, 'fig'):
+		plot_room.fig = plt.figure()
+		plot_room.ax = a3.Axes3D(plot_room.fig)
+		firsttime = True
+
+	if not interactive and not firsttime:
+		plot_room.fig = plt.figure()
+		plot_room.ax = a3.Axes3D(plot_room.fig)
+	else:
+		plot_room.ax.clear()
 
 	default_clr = (0.5, 0.5, 0.9) if wireframe is False else (1.0,) * 3
 	highlight_clr = (.3, .9, .4)
@@ -74,7 +83,7 @@ def plot_room(room: pra.Room, wireframe=False, highlight_wall: int = None) -> No
 		else:
 			p.set_color(colors.rgb2hex(default_clr))
 		p.set_edgecolor(colors.rgb2hex(edge_clr))
-		ax.add_collection3d(p)
+		plot_room.ax.add_collection3d(p)
 
 def load_room(inpath):
 	with open(inpath, 'r') as file:
