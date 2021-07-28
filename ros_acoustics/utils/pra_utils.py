@@ -1,9 +1,16 @@
+from matplotlib import projections
 import numpy as np
 import pyroomacoustics as pra
 from pyroomacoustics import room
 import yaml
 import pprint as pp
 from stl import mesh
+
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from mpl_toolkits import mplot3d as a3
+
+# TODO: make a subclass of Room with all these functions
 
 ## file utils
 
@@ -30,13 +37,12 @@ def room_to_stl(room: pra.Room, outpath: str) -> None:
 	# print(room_mesh.is_closed())
 	room_mesh.save(outpath)
 
-def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
+def stl_to_room(path_to_stl: str, material: pra.Material = None, scale_factor: float = 1.0) -> pra.Room:
 	# TODO: Other room params like fs in args/kwargs?
 	material = pra.Material(0.5, None) if material is None else material
 
 	room_mesh = mesh.Mesh.from_file(path_to_stl)
 	ntriang = room_mesh.vectors.shape[0]
-	scale_factor = 1.0	# TODO: as arg/kwarg?
 
 	walls = []
 	for i in range(ntriang):
@@ -45,6 +51,7 @@ def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
 				room_mesh.vectors[i].T * scale_factor,
 				material.energy_absorption['coeffs'],
 				material.scattering['coeffs'],
+				name='wall_'+str(i)
 			)
 		)
 
@@ -52,6 +59,32 @@ def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
 
 	return room
 
+def plot_room(room: pra.Room, wireframe=False, highlight_wall: int = None, interactive=False) -> None:
+	firsttime = False
+	if not hasattr(plot_room, 'fig'):
+		plot_room.fig = plt.figure()
+		plot_room.ax = a3.Axes3D(plot_room.fig)
+		firsttime = True
+
+	if not interactive and not firsttime:
+		plot_room.fig = plt.figure()
+		plot_room.ax = a3.Axes3D(plot_room.fig)
+	else:
+		plot_room.ax.clear()
+
+	default_clr = (0.5, 0.5, 0.9) if wireframe is False else (1.0,) * 3
+	highlight_clr = (.3, .9, .4)
+	edge_clr = (0,0,0)
+
+	# plot the walls
+	for w in room.walls:
+		p = a3.art3d.Poly3DCollection([w.corners.T], alpha=0.3, lw=1)
+		if w.name.split('_')[1] == str(highlight_wall):
+			p.set_color(colors.rgb2hex(highlight_clr))
+		else:
+			p.set_color(colors.rgb2hex(default_clr))
+		p.set_edgecolor(colors.rgb2hex(edge_clr))
+		plot_room.ax.add_collection3d(p)
 
 def load_room(inpath):
 	with open(inpath, 'r') as file:
