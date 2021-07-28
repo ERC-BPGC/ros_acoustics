@@ -1,9 +1,14 @@
+from matplotlib import projections
 import numpy as np
 import pyroomacoustics as pra
 from pyroomacoustics import room
 import yaml
 import pprint as pp
 from stl import mesh
+
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from mpl_toolkits import mplot3d as a3
 
 ## file utils
 
@@ -45,6 +50,7 @@ def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
 				room_mesh.vectors[i].T * scale_factor,
 				material.energy_absorption['coeffs'],
 				material.scattering['coeffs'],
+				name='wall_'+str(i)
 			)
 		)
 
@@ -52,6 +58,23 @@ def stl_to_room(path_to_stl: str, material: pra.Material = None) -> pra.Room:
 
 	return room
 
+def plot_room(room: pra.Room, wireframe=False, highlight_wall: int = None) -> None:
+	fig = plt.figure()
+	ax = a3.Axes3D(fig)
+
+	default_clr = (0.5, 0.5, 0.9) if wireframe is False else (1.0,) * 3
+	highlight_clr = (.3, .9, .4)
+	edge_clr = (0,0,0)
+
+	# plot the walls
+	for w in room.walls:
+		p = a3.art3d.Poly3DCollection([w.corners.T], alpha=0.3, lw=1)
+		if w.name.split('_')[1] == str(highlight_wall):
+			p.set_color(colors.rgb2hex(highlight_clr))
+		else:
+			p.set_color(colors.rgb2hex(default_clr))
+		p.set_edgecolor(colors.rgb2hex(edge_clr))
+		ax.add_collection3d(p)
 
 def load_room(inpath):
 	with open(inpath, 'r') as file:

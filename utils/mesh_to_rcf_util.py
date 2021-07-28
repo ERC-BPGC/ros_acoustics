@@ -40,8 +40,11 @@ def main():
 		print('Unknown error.')
 		return
 	
-	room.plot()
-	plt.show()
+	for wall in room.walls:
+		widx = int(wall.name.split('_')[1])
+		print('Now showing ' + wall.name)
+		pra_utils.plot_room(room, highlight_wall=widx, wireframe=False)
+		plt.pause(1)
 
 if __name__ == "__main__":
 	main()
