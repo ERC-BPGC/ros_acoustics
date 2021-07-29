@@ -2,7 +2,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch_ros.parameters_type import SomeParameters
 
-path_to_room_mesh = '/home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/simple_pipe.stl'
+path_to_room_mesh = '/home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/t_pipe.stl'
 
 def generate_launch_description():
 	rviz_node = Node(

@@ -12,6 +12,7 @@ class RoomPublisher(Node):
 	"""Class that publishes the marker for a room"""
 	topic = 'room_marker'
 	# path_to_mesh = 'file:///home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/t_pipe.stl'
+	mesh_scale_factor = 0.001
 
 	def __init__(self, path_to_mesh):
 		super().__init__('room_publisher')
@@ -40,7 +41,9 @@ class RoomPublisher(Node):
 		m.pose.orientation.z = 0.
 		m.pose.orientation.w = 0.
 		m.type = Marker.MESH_RESOURCE
-		m.scale.x = m.scale.y = m.scale.z = 1.
+		m.scale.x = self.mesh_scale_factor
+		m.scale.y = -self.mesh_scale_factor
+		m.scale.z = -self.mesh_scale_factor
 		m.action = Marker.ADD
 		m.id = 42
 		m.color.a = 0.6
