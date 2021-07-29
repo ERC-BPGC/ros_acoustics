@@ -9,7 +9,7 @@ from numpy.core.shape_base import block
 parent_dir = pathlib.Path(sys.argv[0]).parent.absolute().parent.absolute().__str__()
 sys.path.append(parent_dir)
 
-from ros_acoustics.utils import pra_utils
+from ros_acoustics.utils.pra_utils import ComplexRoom
 import pyroomacoustics as pra
 import numpy as np
 import matplotlib.pyplot as plt
@@ -42,9 +42,10 @@ def main():
 	scale_factor = float(input('Input scale factor: '))
 
 	try:
-		room = pra_utils.stl_to_room(path_to_stl, default_material, scale_factor)
-	except FileNotFoundError:
+		room = ComplexRoom.from_stl(path_to_stl, default_material, scale_factor)
+	except FileNotFoundError as f:
 		print('Could not find mesh file: ' + path_to_stl + '. Exiting.')
+		print(f)
 		return
 	except:
 		print('Unknown error.')
@@ -59,7 +60,7 @@ def main():
 		widx = int(wall.name.split('_')[1])
 		
 		# TODO: don't keep changing camera angle of view
-		pra_utils.plot_room(room, highlight_wall=widx, wireframe=False, interactive=True)
+		room.plot_interactive(highlight_wall=widx, wireframe=False, interactive=True)
 
 		# ask user for values for wall
 		absorption = get_wall_param(wall.name, 'energy_absorption', 0.5)
@@ -72,13 +73,13 @@ def main():
 		)
 	
 	print(f'Saving file to {path_to_rcf}')
-	pra_utils.dump_room(room, path_to_rcf)
+	room.save_rcf(path_to_rcf)
 
 	test = input('Would you like to load the rcf for testing? (y/n)')
 
 	if test == 'y':
 		print('Loading rcf for testing...')
-		room = pra_utils.load_room(path_to_rcf)
+		room = ComplexRoom.from_rcf(path_to_rcf)
 		plt.ioff()
 		room.plot()
 		plt.show()
