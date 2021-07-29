@@ -31,6 +31,7 @@ install(DIRECTORY
 # install python scripts
 set(python_scripts
   scripts/srv_compute_waveforms.py
+  scripts/room_publisher.py
   test/cli_compute_waveforms.py
   test/test_robot.py
 )
