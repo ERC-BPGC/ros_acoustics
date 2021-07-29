@@ -22,7 +22,7 @@ room = ComplexRoom.make_polygon(
 		height=2, 
 		N=3, 
 		rpy=[0,0,0],
-		reverse_normals=NormalsType.none_reversed,
+		reverse_normals=False,
 	)
 
 obstacle = ComplexRoom.make_polygon(
@@ -32,10 +32,10 @@ obstacle = ComplexRoom.make_polygon(
 		height=1, 
 		N=4, 
 		rpy=[0,0,0],
-		reverse_normals=NormalsType.all_reversed,
+		reverse_normals=True,
 	)
 
-# room.add_obstacle(obstacle)
+room.add_obstacle(obstacle)
 
 source_pos = [1,-1,0.]
 mic_pos = [1, -1, 1]

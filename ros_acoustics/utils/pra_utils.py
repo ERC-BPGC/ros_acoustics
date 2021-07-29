@@ -15,8 +15,8 @@ from mpl_toolkits import mplot3d as a3
 
 # NormalsType = Enum('NormalsType', 'none_reversed all_reversed mix')
 class NormalsType(Enum):
-	none_reversed = 0
-	all_reversed = 1
+	none_reversed = False
+	all_reversed = True
 	mix = 2
 
 class ComplexRoom(pra.Room):
@@ -31,10 +31,10 @@ class ComplexRoom(pra.Room):
 		max_order=4,
 		air_absorption=False, 
 		ray_tracing=False,
-		reverse_normals: NormalsType=NormalsType.none_reversed,
+		normals_type=False,
 	):
 		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
-		self.reverse_normals = reverse_normals
+		self.normals_type = normals_type
 	
 	def plot_interactive(self,
 		wireframe=False, 
@@ -206,18 +206,19 @@ class ComplexRoom(pra.Room):
 	) -> ComplexRoom:
 		wall_faces = ComplexRoom._make_polygon_walls(centre, radius, height, N, rpy, reverse_normals)
 		walls = ComplexRoom._construct_walls(wall_faces, material)
-		return cls(walls, reverse_normals=reverse_normals)
+		normals_type = NormalsType.all_reversed if reverse_normals else NormalsType.none_reversed
+		return cls(walls, normals_type=normals_type)
 
 	def add_obstacle(self, obstacle: ComplexRoom) -> None:
-		if obstacle.reverse_normals is not NormalsType.all_reversed \
-			 or self.reverse_normals is not NormalsType.none_reversed:
+		if obstacle.normals_type is not NormalsType.all_reversed \
+			 or self.normals_type is not NormalsType.none_reversed:
 			raise NotImplementedError("Need to make method for reversing normals first.")
 
-		self.reverse_normals = NormalsType.mix
-		obstacle.reverse_normals = NormalsType.mix
+		self.normals_type = NormalsType.mix
+		obstacle.normals_type = NormalsType.mix
 
 		walls = self.walls + obstacle.walls
-		self.__init__(walls, reverse_normals=NormalsType.mix)
+		self.__init__(walls, normals_type=NormalsType.mix)
 
 
 	@staticmethod
