@@ -20,9 +20,9 @@ class ComplexRoom(pra.Room):
 	def __init__(self, 
 		walls, 
 		fs, 
-		max_order,
-		air_absorption, 
-		ray_tracing
+		max_order=4,
+		air_absorption=False, 
+		ray_tracing=False,
 	):
 		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
 
@@ -89,7 +89,12 @@ class ComplexRoom(pra.Room):
 		return cls(walls, fs=16000, max_order=4, ray_tracing=False)
 
 	@classmethod
-	def from_rcf(cls, path_to_rcf):
+	def from_rcf(cls, path_to_rcf) -> None:
+		"""Factory method to create ComplexRoom from a room config file (rcf)
+
+		Args:
+			path_to_rcf (str): Path to existing rcf
+		"""
 		with open(path_to_rcf, 'r') as file:
 			# get room dict
 			rdin = yaml.load(file, Loader=yaml.FullLoader)
@@ -179,6 +184,8 @@ class ComplexRoom(pra.Room):
 			rd['walls'].append(wd)
 
 		return rd
+
+	## Room utils
 
 # end of ComplexRoom class
 ## room utils
