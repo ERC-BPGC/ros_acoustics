@@ -200,6 +200,13 @@ class ComplexRoom(pra.Room):
 		walls = ComplexRoom._construct_walls(wall_faces, material)
 		return cls(walls)
 
+	def add_obstacle(self, obstacle: ComplexRoom) -> None:
+		pass
+
+	@property
+	def reverse_normals(self):
+		return False
+
 	@staticmethod
 	def _make_polygon_walls(centre, radius, height, N=3, rpy=[0,0,0], reverse_normals=False) -> ComplexRoom:
 		"""Create an extruded polygonal room
