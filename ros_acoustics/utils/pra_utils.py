@@ -7,12 +7,18 @@ from pyroomacoustics import room
 import yaml
 import pprint as pp
 from stl import mesh
+from enum import Enum
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from mpl_toolkits import mplot3d as a3
 
-# TODO: make a subclass of Room with all these functions
+# NormalsType = Enum('NormalsType', 'none_reversed all_reversed mix')
+class NormalsType(Enum):
+	none_reversed = 0
+	all_reversed = 1
+	mix = 2
+
 class ComplexRoom(pra.Room):
 
 	# interactive plot fig and axis
@@ -25,9 +31,11 @@ class ComplexRoom(pra.Room):
 		max_order=4,
 		air_absorption=False, 
 		ray_tracing=False,
+		reverse_normals: NormalsType=NormalsType.none_reversed,
 	):
 		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
-
+		self.reverse_normals = reverse_normals
+	
 	def plot_interactive(self,
 		wireframe=False, 
 		highlight_wall: int = None,
@@ -198,14 +206,19 @@ class ComplexRoom(pra.Room):
 	) -> ComplexRoom:
 		wall_faces = ComplexRoom._make_polygon_walls(centre, radius, height, N, rpy, reverse_normals)
 		walls = ComplexRoom._construct_walls(wall_faces, material)
-		return cls(walls)
+		return cls(walls, reverse_normals=reverse_normals)
 
 	def add_obstacle(self, obstacle: ComplexRoom) -> None:
-		pass
+		if obstacle.reverse_normals is not NormalsType.all_reversed \
+			 or self.reverse_normals is not NormalsType.none_reversed:
+			raise NotImplementedError("Need to make method for reversing normals first.")
 
-	@property
-	def reverse_normals(self):
-		return False
+		self.reverse_normals = NormalsType.mix
+		obstacle.reverse_normals = NormalsType.mix
+
+		walls = self.walls + obstacle.walls
+		self.__init__(walls, reverse_normals=NormalsType.mix)
+
 
 	@staticmethod
 	def _make_polygon_walls(centre, radius, height, N=3, rpy=[0,0,0], reverse_normals=False) -> ComplexRoom:
