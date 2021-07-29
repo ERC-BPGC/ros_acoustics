@@ -59,7 +59,7 @@ def main():
 		widx = int(wall.name.split('_')[1])
 		
 		# TODO: don't keep changing camera angle of view
-		pra_utils.plot_room(room, highlight_wall=widx, wireframe=False, interactive=True)
+		pra_utils.self.plot_interactive(room, highlight_wall=widx, wireframe=False, interactive=True)
 
 		# ask user for values for wall
 		absorption = get_wall_param(wall.name, 'energy_absorption', 0.5)
