@@ -1,3 +1,5 @@
+from __future__ import annotations # for type hints to include enclosing class
+
 from matplotlib import projections
 import numpy as np
 import pyroomacoustics as pra
@@ -27,7 +29,6 @@ class ComplexRoom(pra.Room):
 		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
 
 	def plot_interactive(self,
-		room: pra.Room, 
 		wireframe=False, 
 		highlight_wall: int = None,
 		interactive = True,
@@ -35,7 +36,6 @@ class ComplexRoom(pra.Room):
 		"""Function for creating an interactive persistent plot.
 
 		Args:
-			room (pra.Room): Room to plot
 			wireframe (bool, optional): If true, displays only wireframe. Defaults to False.
 			highlight_wall (int, optional): Index of the wall to highlight.
 		"""
@@ -58,7 +58,7 @@ class ComplexRoom(pra.Room):
 		edge_clr = (0,0,0)
 
 		# plot the walls
-		for w in room.walls:
+		for w in self.walls:
 			p = a3.art3d.Poly3DCollection([w.corners.T], alpha=0.3, lw=1)
 			if w.name.split('_')[1] == str(highlight_wall):
 				p.set_color(colors.rgb2hex(highlight_clr))
@@ -68,7 +68,7 @@ class ComplexRoom(pra.Room):
 			self.pi_ax.add_collection3d(p)
 
 	@classmethod
-	def from_stl(cls, path_to_stl: str, material: pra.Material = None, scale_factor: float = 1.0) -> pra.Room:
+	def from_stl(cls, path_to_stl: str, material: pra.Material = None, scale_factor: float = 1.0) -> ComplexRoom:
 		# TODO: Other room params like fs in args/kwargs?
 		material = pra.Material(0.5, None) if material is None else material
 
@@ -89,7 +89,7 @@ class ComplexRoom(pra.Room):
 		return cls(walls, fs=16000, max_order=4, ray_tracing=False)
 
 	@classmethod
-	def from_rcf(cls, path_to_rcf) -> None:
+	def from_rcf(cls, path_to_rcf) -> ComplexRoom:
 		"""Factory method to create ComplexRoom from a room config file (rcf)
 
 		Args:
