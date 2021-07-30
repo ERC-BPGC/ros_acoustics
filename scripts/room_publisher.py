@@ -64,8 +64,10 @@ def main(args=None):
 		return
 
 	rclpy.init(args=None)
-	time.sleep(3.0)	# TODO: this is a hack, fix lathcing problem
-
+	print('Waiting 1.0s')
+	time.sleep(1.0)	# TODO: this is a hack, fix lathcing problem
+	print('Done... Now Publishing.')
+	
 	room_publisher = RoomPublisher(path_to_mesh)
 	room_publisher.publish_room()
 

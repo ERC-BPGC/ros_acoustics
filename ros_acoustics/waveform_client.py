@@ -45,15 +45,15 @@ class WaveformClient(Node):
 			return False
 		else:
 			self.get_logger().info('Received response!')
-			return response.waveform.array
+			return list(response.waveform.array)
 
 	def send_request(self, source_pos, mic_pos, source_wav):
-		self.req.source_pos.x = source_pos[0]
-		self.req.source_pos.y = source_pos[1]
-		self.req.source_pos.z = source_pos[2]
-		self.req.mic_pos.x = mic_pos[0]
-		self.req.mic_pos.y = mic_pos[1]
-		self.req.mic_pos.z = mic_pos[2]
+		self.req.source_pos.x = float(source_pos[0])
+		self.req.source_pos.y = float(source_pos[1])
+		self.req.source_pos.z = float(source_pos[2])
+		self.req.mic_pos.x = float(mic_pos[0])
+		self.req.mic_pos.y = float(mic_pos[1])
+		self.req.mic_pos.z = float(mic_pos[2])
 		self.req.source_wav.array = list(source_wav)
 
 		self.future = self.cli.call_async(self.req)

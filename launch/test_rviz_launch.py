@@ -17,5 +17,16 @@ def generate_launch_description():
 		arguments=[path_to_room_mesh]
 	)
 
-	return LaunchDescription([rviz_node, room_pub_node])
+	srv_node = Node(
+		package='ros_acoustics',
+		executable='srv_compute_waveforms.py',
+		output='screen',
+	)
+	robot_node = Node(
+		package='ros_acoustics',
+		executable='test_robot.py',
+		output='screen',
+	) 
+
+	return LaunchDescription([rviz_node, room_pub_node, srv_node, robot_node])
 
