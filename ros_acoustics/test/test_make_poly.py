@@ -22,7 +22,7 @@ room = ComplexRoom.make_polygon(
 		centre=[0,0,0], 
 		radius=5, 
 		height=2, 
-		N=3, 
+		N=6, 
 		rpy=[0,0,0],
 		reverse_normals=reverse_normals
 	)

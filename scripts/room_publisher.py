@@ -12,7 +12,7 @@ class RoomPublisher(Node):
 	"""Class that publishes the marker for a room"""
 	topic = 'room_marker'
 	# path_to_mesh = 'file:///home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/t_pipe.stl'
-	mesh_scale_factor = 0.001
+	mesh_scale_factor = 1.
 
 	def __init__(self, path_to_mesh):
 		super().__init__('room_publisher')

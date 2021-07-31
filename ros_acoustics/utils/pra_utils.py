@@ -192,6 +192,17 @@ class ComplexRoom(pra.Room):
 
 		return rd
 
+	def spatial_transform(self, translate, rpy=[0,0,0]):
+
+		# TODO: implement rpy and check if room is mix
+		if list(rpy) != [0,0,0]:
+			raise NotImplementedError
+		
+		for w in self.walls:
+			w.corners += translate.T
+
+		self._reinit_with_new_walls(self.walls)
+
 	## Room utils
 	@classmethod
 	def make_polygon(cls, 
@@ -217,8 +228,24 @@ class ComplexRoom(pra.Room):
 		obstacle.normals_type = NormalsType.mix
 
 		walls = self.walls + obstacle.walls
-		self.__init__(walls, normals_type=NormalsType.mix)
+		self._reinit_with_new_walls(walls, NormalsType.mix)
 
+	def _reinit_with_new_walls(self, n_walls, n_normals_type=None):
+		"""Re-initialise the room object with a new set of walls. The rest of 
+			the parameters remain the same.
+
+		Args:
+			n_walls (list of pra.Wall): List of pra Wall objects
+			n_normals_type (NormalsType or None): If none, self.normals_type is used
+		"""
+		self.__init__(
+			n_walls,
+			fs=self.fs,
+			max_order=self.max_order,
+			air_absorption=self.air_absorption,
+			ray_tracing=self.ray_tracing,
+			normals_type=self.normals_type if n_normals_type is None else n_normals_type
+		)
 
 	@staticmethod
 	def _make_polygon_walls(centre, radius, height, N=3, rpy=[0,0,0], reverse_normals=False) -> ComplexRoom:

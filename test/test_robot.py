@@ -16,9 +16,10 @@ def main(args=None):
 	source_rel_pos = np.array([0,0,0.])
 	mic_rel_pos = np.array([0,0,0.1])
 
+
 	rm_node = rclpy.create_node('robot_marker')
 	rm_pub = rm_node.create_publisher(Marker, 'robot_marker', 1)
-	rm_pub.publish(gen_robot_marker(robot_pos, rm_node.get_clock().now()))
+	rm_pub.publish(gen_robot_marker(robot_pos, rm_node.get_clock().now().to_msg()))
 	source_wav = gen_source_wav_demo()
 
 	waveform_client = WaveformClient()
@@ -42,7 +43,7 @@ def gen_source_wav_demo():
 def gen_robot_marker(robot_pos, timestamp):
 	m = Marker()
 	m.header.frame_id = "map"
-	# m.header.stamp = timestamp
+	m.header.stamp = timestamp
 	m.pose.position.x = float(robot_pos[0])
 	m.pose.position.y = float(robot_pos[1])
 	m.pose.position.z = float(robot_pos[2])
@@ -51,9 +52,9 @@ def gen_robot_marker(robot_pos, timestamp):
 	m.pose.orientation.z = 0.
 	m.pose.orientation.w = 0.
 	m.type = Marker.CUBE
-	m.scale.x = 1.
-	m.scale.y = 1.
-	m.scale.z = 1.
+	m.scale.x = .2
+	m.scale.y = .2
+	m.scale.z = .2
 	m.action = Marker.ADD
 	m.id = 69
 	m.color.a = 1.
