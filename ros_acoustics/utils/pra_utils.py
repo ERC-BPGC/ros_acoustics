@@ -1,4 +1,5 @@
-from __future__ import annotations # for type hints to include enclosing class
+from __future__ import annotations
+from collections import namedtuple # for type hints to include enclosing class
 
 import numpy as np
 import pyroomacoustics as pra
@@ -7,6 +8,7 @@ import yaml
 import pprint as pp
 from stl import mesh
 from enum import Enum
+from dataclasses import dataclass
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
@@ -17,6 +19,30 @@ class NormalsType(Enum):
 	none_reversed = False
 	all_reversed = True
 	mix = 2
+
+@dataclass
+class Limits:
+	left: float = 0.
+	right: float = 0.
+
+	def update(self, min: float, max: float) -> None:
+		assert max >= min
+		if min < self.left:
+			self.left = min
+		if max > self.right:
+			self.right = max
+
+@dataclass
+class BoundingBox:
+	x: Limits = Limits()
+	y: Limits = Limits()
+	z: Limits = Limits()
+	
+	def get_bounding_cube(self) -> Limits:
+		l = Limits()
+		l.left = min(self.x.left, self.y.left, self.z.left)
+		l.right = max(self.x.right, self.y.right, self.z.right)
+		return l
 
 class ComplexRoom(pra.Room):
 
@@ -34,6 +60,7 @@ class ComplexRoom(pra.Room):
 	):
 		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
 		self.normals_type = normals_type
+		self._bounding_box = None
 	
 	def plot_interactive(self,
 		wireframe=False, 
@@ -255,6 +282,23 @@ class ComplexRoom(pra.Room):
 			normals_type=self.normals_type if n_normals_type is None else n_normals_type
 		)
 
+	def _calc_bounding_box(self):
+		self._bounding_box = BoundingBox()
+
+		for w in self.walls:
+			xmax, xmin = w.corners[0].max(), w.corners[0].min()
+			ymax, ymin = w.corners[1].max(), w.corners[1].min()
+			zmax, zmin = w.corners[2].max(), w.corners[2].min()
+			
+			self._bounding_box.x.update(xmin, xmax)
+			self._bounding_box.y.update(ymin, ymax)
+			self._bounding_box.z.update(zmin, zmax)
+
+	def get_bounding_box(self):
+		if self._bounding_box is None:
+			self._calc_bounding_box()
+		return self._bounding_box
+	
 	@staticmethod
 	def _make_polygon_walls(centre, radius, height, N=3, rpy=[0,0,0], reverse_normals=False) -> ComplexRoom:
 		"""Create an extruded polygonal room

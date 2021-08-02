@@ -44,6 +44,8 @@ room.add_source(source_pos)
 room.add_microphone(mic_pos)
 room.compute_rir()
 
+print(room.get_bounding_box().get_bounding_cube())
+
 # plot room
 room.plot(img_order=1)
 plt.show()
