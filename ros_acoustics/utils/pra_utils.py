@@ -101,6 +101,16 @@ class ComplexRoom(pra.Room):
 			p.set_edgecolor(colors.rgb2hex(edge_clr))
 			self.pi_ax.add_collection3d(p)
 
+	def plot(self, **kwargs):
+		bounding_cube = self.get_bounding_box().get_bounding_cube()
+
+		fig, ax = super().plot(**kwargs)
+		ax.set_xlim3d(left=bounding_cube.left, right=bounding_cube.right)
+		ax.set_ylim3d(bottom=bounding_cube.left, top=bounding_cube.right)
+		ax.set_zlim3d(bottom=bounding_cube.left, top=bounding_cube.right)
+
+		return fig, ax
+
 	@classmethod
 	def from_stl(cls, path_to_stl: str, material: pra.Material = None, scale_factor: float = 1.0) -> ComplexRoom:
 		# TODO: Other room params like fs in args/kwargs?
