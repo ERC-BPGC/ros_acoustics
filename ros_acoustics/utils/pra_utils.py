@@ -26,6 +26,7 @@ class Limits:
 	right: float = 0.
 
 	def update(self, min: float, max: float) -> None:
+		"""Updates left and right values"""
 		assert max >= min
 		if min < self.left:
 			self.left = min
@@ -34,11 +35,13 @@ class Limits:
 
 @dataclass
 class BoundingBox:
+	"""Stores the 3D coordinate limits of a figure."""
 	x: Limits = Limits()
 	y: Limits = Limits()
 	z: Limits = Limits()
 	
 	def get_bounding_cube(self) -> Limits:
+		"""Get the 3D cube coordinate limits of a box."""
 		l = Limits()
 		l.left = min(self.x.left, self.y.left, self.z.left)
 		l.right = max(self.x.right, self.y.right, self.z.right)
@@ -102,6 +105,7 @@ class ComplexRoom(pra.Room):
 			self.pi_ax.add_collection3d(p)
 
 	def plot(self, **kwargs):
+		"""Plots room with equal axis constrained to the room's bounding cube."""
 		bounding_cube = self.get_bounding_box().get_bounding_cube()
 
 		fig, ax = super().plot(**kwargs)
@@ -230,6 +234,15 @@ class ComplexRoom(pra.Room):
 		return rd
 
 	def spatial_transform(self, translate, rpy=[0,0,0]):
+		"""Transform room's wall's coordinates by a translation and euler rotation.
+
+		Args:
+			translate (list-like of shape(3,)): Vector that describes translation.
+			rpy (list-like of shape(3,), optional): Euler angles. Defaults to [0,0,0].
+
+		Raises:
+			NotImplementedError: Haven't implemented rpy yet.
+		"""
 
 		# TODO: implement rpy and check if room is mix
 		if list(rpy) != [0,0,0]:
@@ -265,6 +278,14 @@ class ComplexRoom(pra.Room):
 		return cls(walls, normals_type=normals_type)
 
 	def add_obstacle(self, obstacle: ComplexRoom) -> None:
+		"""Add another room as an 'obstacle' in a larger room.
+
+		Args:
+			obstacle (ComplexRoom): Room to add inside self
+
+		Raises:
+			NotImplementedError: TODO: Need to reverse normals of obstacle if isn't already
+		"""
 		if obstacle.normals_type is not NormalsType.all_reversed \
 			 or self.normals_type is not NormalsType.none_reversed:
 			raise NotImplementedError("Need to make method for reversing normals first.")
@@ -293,6 +314,7 @@ class ComplexRoom(pra.Room):
 		)
 
 	def _calc_bounding_box(self):
+		"""Protected method that determines the bounding box of the room and stores it in self._bounding_box."""
 		self._bounding_box = BoundingBox()
 
 		for w in self.walls:
@@ -304,7 +326,8 @@ class ComplexRoom(pra.Room):
 			self._bounding_box.y.update(ymin, ymax)
 			self._bounding_box.z.update(zmin, zmax)
 
-	def get_bounding_box(self):
+	def get_bounding_box(self) -> BoundingBox:
+		"""Returns bounding box of room."""
 		if self._bounding_box is None:
 			self._calc_bounding_box()
 		return self._bounding_box
