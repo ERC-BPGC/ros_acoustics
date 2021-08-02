@@ -34,6 +34,7 @@ obstacle = ComplexRoom.make_polygon(
 		rpy=[0,0,0],
 		reverse_normals=True,
 	)
+obstacle.spatial_transform([.4,0,.3])
 
 room.add_obstacle(obstacle)
 

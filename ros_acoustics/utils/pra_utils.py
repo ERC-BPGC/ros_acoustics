@@ -198,10 +198,18 @@ class ComplexRoom(pra.Room):
 		if list(rpy) != [0,0,0]:
 			raise NotImplementedError
 		
+		n_walls = []
 		for w in self.walls:
-			w.corners += translate.T
+			n_walls.append(
+				pra.wall_factory(
+					w.corners + np.array([translate]).T,
+					w.absorption,
+					w.scatter,
+					w.name,
+				)
+			)
 
-		self._reinit_with_new_walls(self.walls)
+		self._reinit_with_new_walls(n_walls)
 
 	## Room utils
 	@classmethod
