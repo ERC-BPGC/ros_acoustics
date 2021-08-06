@@ -104,14 +104,30 @@ class ComplexRoom(pra.Room):
 			p.set_edgecolor(colors.rgb2hex(edge_clr))
 			self.pi_ax.add_collection3d(p)
 
-	def plot(self, **kwargs):
+	def plot(self, show_normals=False, **kwargs):
 		"""Plots room with equal axis constrained to the room's bounding cube."""
-		bounding_cube = self.get_bounding_box().get_bounding_cube()
-
 		fig, ax = super().plot(**kwargs)
+		
+		# set equal axis aspect ratio hack
+		bounding_cube = self.get_bounding_box().get_bounding_cube()
 		ax.set_xlim3d(left=bounding_cube.left, right=bounding_cube.right)
 		ax.set_ylim3d(bottom=bounding_cube.left, top=bounding_cube.right)
 		ax.set_zlim3d(bottom=bounding_cube.left, top=bounding_cube.right)
+
+		if show_normals:
+			# points arranged column-wise in both arrays
+			normals_start = np.array(
+				[np.mean(wall.corners, axis=1) for wall in self.walls]
+			).T
+			normals_vec = np.array([wall.normal for wall in self.walls]).T
+			import pprint as pp
+			pp.pprint(normals_start)
+			pp.pprint(normals_vec)
+			ax.quiver(
+				normals_start[0], normals_start[1], normals_start[2],
+				normals_vec[0], normals_vec[1], normals_vec[2],
+				length=1., normalize=True,
+			)
 
 		return fig, ax
 

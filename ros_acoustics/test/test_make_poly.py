@@ -10,6 +10,8 @@ parent_dir = pathlib.Path(sys.argv[0]).\
 				__str__()
 sys.path.append(parent_dir)
 
+"""Tests the make_polygon factory method and plot using show_normals=True"""
+
 from ros_acoustics.utils.pra_utils import ComplexRoom
 import pyroomacoustics as pra
 import matplotlib.pyplot as plt
@@ -33,16 +35,16 @@ source_pos = [1,0,.3]
 room.add_source(source_pos)
 room.add_microphone([0,0,0.5])
 
-print('Volume: ', room.get_volume())
-for w in room.walls:
-	print(w.normal / np.linalg.norm(w.normal), w.corners[:,0], w.area())
-	print(w.corners)
+# print('Volume: ', room.get_volume())
+# for w in room.walls:
+# 	print(w.normal / np.linalg.norm(w.normal), w.corners[:,0], w.area())
+# 	print(w.corners)
 
 room.compute_rir()
 
 # plot room
-room.plot(img_order=1)
-# plt.show()
+room.plot(show_normals=True, img_order=1)
+plt.show()
 
 # plot rir
 room.plot_rir()
