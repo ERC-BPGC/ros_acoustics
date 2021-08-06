@@ -59,7 +59,7 @@ class ComplexRoom(pra.Room):
 		max_order=4,
 		air_absorption=False, 
 		ray_tracing=False,
-		normals_type=False,
+		normals_type=NormalsType.none_reversed,
 	):
 		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
 		self.normals_type = normals_type
@@ -162,11 +162,72 @@ class ComplexRoom(pra.Room):
 			)
 
 		return cls(walls,
-						fs=rdin['fs'],
-						max_order=rdin['max_order'],
-						air_absorption=rdin['air_absorption'],
-						ray_tracing=rdin['ray_tracing']	
-					)
+					fs=rdin['fs'],
+					max_order=rdin['max_order'],
+					air_absorption=rdin['air_absorption'],
+					ray_tracing=rdin['ray_tracing']	,
+				)
+
+	@classmethod
+	def from_bounding_box(cls, bounding_box: BoundingBox, material: pra.Material) -> ComplexRoom:
+		xl, xr = bounding_box.x.left, bounding_box.x.right
+		yl, yr = bounding_box.y.left, bounding_box.y.right
+		zl, zr = bounding_box.z.left, bounding_box.z.right
+
+		base = np.array([[xl, xr, xr, xl, xl], [yl, yl, yr, yr, yl]]).T
+		z_s = np.array([zl, zr, zr, zl])
+
+		walls = []
+
+		for i in range(4):
+			corners = np.vstack((
+				base[i], base[i], base[i+1], base[i+1],
+			))
+			corners = np.vstack((
+				corners.T, z_s
+			))
+			walls.append(
+				pra.wall_factory(
+					corners,
+					material.absorption_coeffs,
+					material.scattering_coeffs,
+				)
+			)
+
+		bottom_wall_corners = np.hstack((
+			base[0:4],
+			np.full((4,1), zl),
+		))
+		top_wall_corners = np.hstack((
+			base[0:4],
+			np.full((4,1), zr),
+		))[::-1]
+
+		# bottom_wall_corners = bottom_wall_corners[::-1]
+		# top_wall_corners = top_wall_corners[::-1]
+
+		walls.append(
+			pra.wall_factory(
+				bottom_wall_corners.T,
+				material.absorption_coeffs,
+				material.scattering_coeffs,
+			))
+
+		walls.append(
+			pra.wall_factory(
+				top_wall_corners.T,
+				material.absorption_coeffs,
+				material.scattering_coeffs,
+			)
+		)
+		
+		return cls(walls, normals_type=NormalsType.none_reversed)
+
+
+
+	@classmethod 
+	def anechoic_from_bounding_box(cls, bounding_box: BoundingBox, clearance: float = 1.) -> ComplexRoom:
+		pass
 
 	def save_rcf(self, path_to_rcf: str) -> None:
 		"""Saves room into a room configuration file (rcf) for later use.
