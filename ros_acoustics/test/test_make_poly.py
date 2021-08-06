@@ -13,7 +13,9 @@ sys.path.append(parent_dir)
 from ros_acoustics.utils.pra_utils import ComplexRoom
 import pyroomacoustics as pra
 import matplotlib.pyplot as plt
+import numpy as np
 
+np.set_printoptions(precision=2, suppress=True)
 reverse_normals = False
 
 room_material = pra.Material(0.8, None)
@@ -21,8 +23,8 @@ room = ComplexRoom.make_polygon(
 		material=room_material,
 		centre=[0,0,0], 
 		radius=5, 
-		height=2, 
-		N=6, 
+		height=2.3, 
+		N=4, 
 		rpy=[0,0,0],
 		reverse_normals=reverse_normals
 	)
@@ -30,12 +32,18 @@ room = ComplexRoom.make_polygon(
 source_pos = [1,0,.3]
 room.add_source(source_pos)
 room.add_microphone([0,0,0.5])
+
+print('Volume: ', room.get_volume())
+for w in room.walls:
+	print(w.normal / np.linalg.norm(w.normal), w.corners[:,0], w.area())
+	print(w.corners)
+
 room.compute_rir()
 
 # plot room
 room.plot(img_order=1)
-plt.show()
+# plt.show()
 
 # plot rir
 room.plot_rir()
-plt.show()
+# plt.show()
