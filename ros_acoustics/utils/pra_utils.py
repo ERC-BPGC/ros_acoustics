@@ -25,6 +25,10 @@ class Limits:
 	left: float = 0.
 	right: float = 0.
 
+	def __post_init__(self):
+		if self.left > self.right:
+			raise ValueError('left must not be more than right.')
+
 	def update(self, min: float, max: float) -> None:
 		"""Updates left and right values"""
 		assert max >= min
@@ -114,19 +118,26 @@ class ComplexRoom(pra.Room):
 		ax.set_ylim3d(bottom=bounding_cube.left, top=bounding_cube.right)
 		ax.set_zlim3d(bottom=bounding_cube.left, top=bounding_cube.right)
 
-		if show_normals:
+		if isinstance(show_normals, dict):
+			_show_normals = show_normals.get('display', True)
+			_normals_len = show_normals.get('length', 0.2)
+		elif isinstance(show_normals, bool):
+			_show_normals = show_normals
+			_normals_len = 0.2
+		else:
+			raise TypeError('show_normals paramater should be bool or dict.')
+		
+		if _show_normals is True:
 			# points arranged column-wise in both arrays
 			normals_start = np.array(
 				[np.mean(wall.corners, axis=1) for wall in self.walls]
 			).T
 			normals_vec = np.array([wall.normal for wall in self.walls]).T
-			import pprint as pp
-			pp.pprint(normals_start)
-			pp.pprint(normals_vec)
+
 			ax.quiver(
 				normals_start[0], normals_start[1], normals_start[2],
 				normals_vec[0], normals_vec[1], normals_vec[2],
-				length=1., normalize=True,
+				length=_normals_len, normalize=True,
 			)
 
 		return fig, ax
@@ -185,42 +196,51 @@ class ComplexRoom(pra.Room):
 				)
 
 	@classmethod
-	def from_bounding_box(cls, bounding_box: BoundingBox, material: pra.Material) -> ComplexRoom:
+	def from_bounding_box(cls, bounding_box: BoundingBox, material: pra.Material, reverse_normals: bool = False) -> ComplexRoom:
+		# aliases for readability
 		xl, xr = bounding_box.x.left, bounding_box.x.right
 		yl, yr = bounding_box.y.left, bounding_box.y.right
 		zl, zr = bounding_box.z.left, bounding_box.z.right
 
+		# base of 2D points, is in row-wise, normal facing +z form (assuming RH rule)
 		base = np.array([[xl, xr, xr, xl, xl], [yl, yl, yr, yr, yl]]).T
 		z_s = np.array([zl, zr, zr, zl])
 
 		walls = []
 
 		for i in range(4):
+			# corners is kept row-wise until pra.wall_factory
 			corners = np.vstack((
 				base[i], base[i], base[i+1], base[i+1],
 			))
-			corners = np.vstack((
-				corners.T, z_s
+			corners = np.hstack((
+				corners, z_s.reshape(4,1)
 			))
+			# corners are already in reverse order here (RH rule)
+			# hence reverse them unless reverse_normals is true
+			corners = corners[::-1] if not reverse_normals else corners
+
 			walls.append(
 				pra.wall_factory(
-					corners,
+					corners.T,
 					material.absorption_coeffs,
 					material.scattering_coeffs,
 				)
 			)
 
+		# according to RH rule, bottom_wall_corners is already reversed i.e. facing inwards
 		bottom_wall_corners = np.hstack((
 			base[0:4],
 			np.full((4,1), zl),
-		))
+		))[::-1]
 		top_wall_corners = np.hstack((
 			base[0:4],
 			np.full((4,1), zr),
-		))[::-1]
+		))
 
-		# bottom_wall_corners = bottom_wall_corners[::-1]
-		# top_wall_corners = top_wall_corners[::-1]
+		if reverse_normals:
+			bottom_wall_corners = bottom_wall_corners[::-1]
+			top_wall_corners = top_wall_corners[::-1]
 
 		walls.append(
 			pra.wall_factory(
@@ -236,9 +256,8 @@ class ComplexRoom(pra.Room):
 				material.scattering_coeffs,
 			)
 		)
-		
-		return cls(walls, normals_type=NormalsType.none_reversed)
-
+		normals_type = NormalsType.all_reversed if reverse_normals else NormalsType.none_reversed
+		return cls(walls, normals_type=normals_type)
 
 
 	@classmethod 
@@ -429,8 +448,8 @@ class ComplexRoom(pra.Room):
 			x = radius * np.cos(2*np.pi*n/N)
 			y = radius * np.sin(2*np.pi*n/N)
 
-			lower_points.append(np.array([x, y, height/2]))
-			upper_points.append(np.array([x, y, -height/2]))
+			lower_points.append(np.array([x, y, -height/2]))
+			upper_points.append(np.array([x, y, height/2]))
 
 		# do rotation and translation
 		cr, cp, cy = np.cos(rpy)
@@ -457,27 +476,30 @@ class ComplexRoom(pra.Room):
 		# add side walls
 		for i in range(N-1):
 			wall = np.array([
-					lower_points[i], upper_points[i],
-					upper_points[i+1], lower_points[i+1]
+					lower_points[i], lower_points[i+1],
+					upper_points[i+1], upper_points[i]
 				])
 			wall = wall[::-1] if reverse_normals else wall
 			walls.append(wall)
 
 		# last side wall
 		wall = np.array([
-					lower_points[N-1], upper_points[N-1],
-					upper_points[0],lower_points[0] 
+					lower_points[N-1], lower_points[0],
+					upper_points[0], upper_points[N-1] 
 				])
 		wall = wall[::-1] if reverse_normals else wall
 		walls.append(wall)
 
+		# lower_points was already created in the reversed order
+		# since by RH rule, normal is pointing inward
 		if reverse_normals:
-			lower_points = lower_points[::-1]
 			upper_points = upper_points[::-1]
+		else:
+			lower_points = lower_points[::-1]
 
 		# lower and upper walls
 		walls.append(np.array(lower_points))
-		walls.append(np.array(upper_points[::-1]))
+		walls.append(np.array(upper_points))
 
 		return walls
 

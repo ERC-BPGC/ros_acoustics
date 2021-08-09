@@ -18,7 +18,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 np.set_printoptions(precision=2, suppress=True)
-reverse_normals = False
+
+# rpy = np.pi * np.random.rand(3) - np.pi/2
+# rpy = [np.pi/2, np.pi/4, np.pi/3]
+rpy = [0,0,0]
+print(rpy)
 
 room_material = pra.Material(0.8, None)
 room = ComplexRoom.make_polygon(
@@ -27,25 +31,27 @@ room = ComplexRoom.make_polygon(
 		radius=5, 
 		height=2.3, 
 		N=4, 
-		rpy=[0,0,0],
-		reverse_normals=reverse_normals
+		rpy=rpy,
+		reverse_normals=False
 	)
 
-source_pos = [1,0,.3]
-room.add_source(source_pos)
-room.add_microphone([0,0,0.5])
+# source_pos = [1,0,.3]
+# room.add_source(source_pos)
+# room.add_microphone([0,0,0.5])
+
+print(room.normals_type)
 
 # print('Volume: ', room.get_volume())
 # for w in room.walls:
 # 	print(w.normal / np.linalg.norm(w.normal), w.corners[:,0], w.area())
 # 	print(w.corners)
 
-room.compute_rir()
+# room.compute_rir()
 
 # plot room
-room.plot(show_normals=True, img_order=1)
+room.plot(show_normals={'length':1.}, img_order=1)
 plt.show()
-
+# room.compute_rir
 # plot rir
-room.plot_rir()
+# room.plot_rir()
 # plt.show()
