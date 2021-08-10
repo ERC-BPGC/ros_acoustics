@@ -14,7 +14,7 @@ import pyroomacoustics as pra
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d as a3
-import os
+import os, copy
 
 def main():
 	if len(sys.argv) != 3:
@@ -59,7 +59,7 @@ def main():
 		# disp_guide_message()
 		print(f'There are {len(room.walls)} walls. ')
 
-		plt.ion() # TODO: close plot after for loop
+		plt.ion() 
 		for wall in room.walls:
 			widx = int(wall.name.split('_')[1])
 			
@@ -76,9 +76,25 @@ def main():
 				[scattering],
 				name=wall.name
 			)
+
+		plt.close()
 	else:
 		# walls already have the default values as specified in the constructor
 		print('Assigning all walls the default values...')
+
+	# Enclose in bounding box
+	use_bb = input('Do you want model enclosed in anechoic bounding box? (y/n): ')
+	if use_bb == 'y':
+		temp_room = ComplexRoom.from_bounding_box(
+				room.get_bounding_box(),
+				pra.Material(0.1, None),
+				max_order = 0,	
+			)
+		temp_room.add_obstacle(room)
+		temp_room.plot(img_order=2)
+		plt.show()
+		exit(1)
+
 		
 	print(f'Saving file to {path_to_rcf}')
 	room.save_rcf(path_to_rcf)
