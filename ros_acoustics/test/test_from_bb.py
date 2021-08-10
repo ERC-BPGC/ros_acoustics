@@ -27,16 +27,18 @@ room_bb = BoundingBox(
 )
 room = ComplexRoom.from_bounding_box(
 	room_bb,
-	room_material
+	room_material,
+	fs=12000,
+	max_order=0,
 )
 # room.spatial_transform(translate=10*np.random.rand(3))
 
 room.add_source((3, 3, 1))
 room.add_microphone((3, 3, 2))
 
-print('Volume: ', room.get_volume())
-for w in room.walls:
-	print(w.normal / np.linalg.norm(w.normal), w.corners[:,0], w.area())
+# print('Volume: ', room.get_volume())
+# for w in room.walls:
+# 	print(w.normal / np.linalg.norm(w.normal), w.corners[:,0], w.area())
 	
 # plot room
 room.plot(show_normals={'length': 1.4}, img_order=1)
@@ -45,7 +47,7 @@ plt.show()
 # for w in room.walls:
 # 	print(w.corners)
 
-# print(room.get_volume())
+print(room.fs)
 
 # plot rir
 room.compute_rir()

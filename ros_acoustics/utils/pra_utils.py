@@ -59,13 +59,13 @@ class ComplexRoom(pra.Room):
 
 	def __init__(self, 
 		walls, 
-		fs=16000, 
 		max_order=4,
-		air_absorption=False, 
-		ray_tracing=False,
 		normals_type=NormalsType.none_reversed,
+		**kwargs,
 	):
-		super().__init__(walls, fs=fs, max_order=max_order, air_absorption=air_absorption, ray_tracing=ray_tracing)
+		assert isinstance(normals_type, NormalsType)
+
+		super().__init__(walls, max_order=max_order, **kwargs)
 		self.normals_type = normals_type
 		self._bounding_box = None
 	
@@ -196,7 +196,11 @@ class ComplexRoom(pra.Room):
 				)
 
 	@classmethod
-	def from_bounding_box(cls, bounding_box: BoundingBox, material: pra.Material, reverse_normals: bool = False) -> ComplexRoom:
+	def from_bounding_box(cls, 
+						bounding_box: BoundingBox, 
+						material: pra.Material, 
+						reverse_normals: bool = False,
+						**kwargs) -> ComplexRoom:
 		# aliases for readability
 		xl, xr = bounding_box.x.left, bounding_box.x.right
 		yl, yr = bounding_box.y.left, bounding_box.y.right
@@ -257,12 +261,9 @@ class ComplexRoom(pra.Room):
 			)
 		)
 		normals_type = NormalsType.all_reversed if reverse_normals else NormalsType.none_reversed
-		return cls(walls, normals_type=normals_type)
+		return cls(walls, normals_type=normals_type, **kwargs)
 
-
-	@classmethod 
-	def anechoic_from_bounding_box(cls, bounding_box: BoundingBox, clearance: float = 1.) -> ComplexRoom:
-		pass
+	# def
 
 	def save_rcf(self, path_to_rcf: str) -> None:
 		"""Saves room into a room configuration file (rcf) for later use.
