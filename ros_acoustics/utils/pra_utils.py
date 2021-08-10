@@ -200,11 +200,16 @@ class ComplexRoom(pra.Room):
 						bounding_box: BoundingBox, 
 						material: pra.Material, 
 						reverse_normals: bool = False,
+						spacing=None,
 						**kwargs) -> ComplexRoom:
 		# aliases for readability
 		xl, xr = bounding_box.x.left, bounding_box.x.right
 		yl, yr = bounding_box.y.left, bounding_box.y.right
 		zl, zr = bounding_box.z.left, bounding_box.z.right
+
+		if spacing is not None:
+			xl, yl, zl = [v-spacing for v in (xl, yl, zl)]
+			xr, yr, zr = [v+spacing for v in (xr, yr, zr)]
 
 		# base of 2D points, is in row-wise, normal facing +z form (assuming RH rule)
 		base = np.array([[xl, xr, xr, xl, xl], [yl, yl, yr, yr, yl]]).T

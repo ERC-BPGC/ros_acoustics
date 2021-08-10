@@ -89,12 +89,11 @@ def main():
 				room.get_bounding_box(),
 				pra.Material(0.1, None),
 				max_order = 0,	
+				spacing=2.
 			)
 		temp_room.add_obstacle(room)
-		temp_room.plot(img_order=2)
-		plt.show()
-		exit(1)
-
+		temp_room.plot(img_order=2, show_normals=True)
+		room = temp_room
 		
 	print(f'Saving file to {path_to_rcf}')
 	room.save_rcf(path_to_rcf)
@@ -105,7 +104,7 @@ def main():
 		print('Loading rcf for testing...')
 		room = ComplexRoom.from_rcf(path_to_rcf)
 		plt.ioff()
-		room.plot()
+		room.plot(show_normals={'length':0.5})
 		plt.show()
 	else:
 		print('Test aborted')

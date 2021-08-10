@@ -30,6 +30,7 @@ room = ComplexRoom.from_bounding_box(
 	room_material,
 	fs=12000,
 	max_order=0,
+	spacing=4.
 )
 # room.spatial_transform(translate=10*np.random.rand(3))
 
