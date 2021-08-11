@@ -200,11 +200,16 @@ class ComplexRoom(pra.Room):
 						bounding_box: BoundingBox, 
 						material: pra.Material, 
 						reverse_normals: bool = False,
+						spacing=None,
 						**kwargs) -> ComplexRoom:
 		# aliases for readability
 		xl, xr = bounding_box.x.left, bounding_box.x.right
 		yl, yr = bounding_box.y.left, bounding_box.y.right
 		zl, zr = bounding_box.z.left, bounding_box.z.right
+
+		if spacing is not None:
+			xl, yl, zl = [v-spacing for v in (xl, yl, zl)]
+			xr, yr, zr = [v+spacing for v in (xr, yr, zr)]
 
 		# base of 2D points, is in row-wise, normal facing +z form (assuming RH rule)
 		base = np.array([[xl, xr, xr, xl, xl], [yl, yl, yr, yr, yl]]).T
@@ -383,15 +388,30 @@ class ComplexRoom(pra.Room):
 		Raises:
 			NotImplementedError: TODO: Need to reverse normals of obstacle if isn't already
 		"""
-		if obstacle.normals_type is not NormalsType.all_reversed \
-			 or self.normals_type is not NormalsType.none_reversed:
-			raise NotImplementedError("Need to make method for reversing normals first.")
+		if self.normals_type is not NormalsType.none_reversed:
+			raise NotImplementedError('Parent room must have unreversed normals.')
 
 		self.normals_type = NormalsType.mix
-		obstacle.normals_type = NormalsType.mix
+		
+		walls = self.walls 
+		if obstacle.normals_type is NormalsType.none_reversed:
+			# reverse wall normals by remaking walls wherein corners are reversed
+			for wall in obstacle.walls:
+				corners = np.flip(wall.corners, axis=1)
+				walls.append(
+					pra.wall_factory(
+						corners,
+						wall.absorption,
+						wall.scatter,
+						wall.name,
+					)
+				)
+		elif obstacle.normals_type is NormalsType.all_reversed:
+			walls += obstacle.walls
+		else:
+			raise NotImplementedError('Cannot add obstacle with mixed normals to room.')
 
-		walls = self.walls + obstacle.walls
-		self._reinit_with_new_walls(walls, NormalsType.mix)
+		self._reinit_with_new_walls(walls, NormalsType.mix) # TODO: reinit with other params?
 
 	def _reinit_with_new_walls(self, n_walls, n_normals_type=None):
 		"""Re-initialise the room object with a new set of walls. The rest of 

@@ -14,5 +14,5 @@ import matplotlib.pyplot as plt
 path_to_stl = 'test/data/simple_pipe.stl'
 
 room = ComplexRoom.from_stl(path_to_stl)
-room.plot()
+room.plot(show_normals={'length':.6})
 plt.show()
