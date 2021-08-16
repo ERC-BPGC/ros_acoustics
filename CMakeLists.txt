@@ -30,10 +30,9 @@ install(DIRECTORY
 
 # install python scripts
 set(python_scripts
-  scripts/srv_compute_waveforms.py
-  scripts/room_publisher.py
-  test/cli_compute_waveforms.py
-  test/test_robot.py
+  ros_acoustics/acoustics_service.py
+  ros_acoustics/room_publisher.py
+  test/test_basic.py
 )
 install(PROGRAMS
   ${python_scripts}
