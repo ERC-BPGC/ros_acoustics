@@ -23,7 +23,7 @@ class AcousticsService(Node):
 		# retrieve room parameters
 		# self._room_mesh_path = path_to_mesh
 		self._room_rcf_path = path_to_rcf
-		self._room_fs = 8000
+		self._room_fs = 16000
 		self._room_air_absorption = True
 		self._room_ray_tracing = False
 
@@ -60,7 +60,7 @@ class AcousticsService(Node):
 		self.get_logger().info(info_msg)
 
 def main():
-	rclpy.init(args=None)
+	rclpy.init()
 
     # manage cli args
 	parser = argparse.ArgumentParser()
@@ -68,9 +68,9 @@ def main():
 						help='Path to the room rcf file')
 	parser.add_argument('--mesh',
 						help='Path to the room mesh file, to display in rviz')
-	args = parser.parse_args()
-
-	compute_waveforms_service = AcousticsService(args.rcf)
+	my_args, _ = parser.parse_known_args()
+	print('rcf path: ', my_args.rcf)
+	compute_waveforms_service = AcousticsService(my_args.rcf)
 
 	rclpy.spin(compute_waveforms_service)
 
