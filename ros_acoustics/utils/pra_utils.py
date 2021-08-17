@@ -118,6 +118,8 @@ class ComplexRoom(pra.Room):
 		ax.set_ylim3d(bottom=bounding_cube.left, top=bounding_cube.right)
 		ax.set_zlim3d(bottom=bounding_cube.left, top=bounding_cube.right)
 
+		# TODO: centre the room in the plot
+
 		if isinstance(show_normals, dict):
 			_show_normals = show_normals.get('display', True)
 			_normals_len = show_normals.get('length', 0.2)

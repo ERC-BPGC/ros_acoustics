@@ -17,7 +17,7 @@ def main():
 
 	simwav = acoustics_client.get_waveform(source_pos, mic_pos, wav)
 	dists = np.linspace(0, len(simwav)*343/fs, len(simwav))
-	# plt.ion()
+
 	plt.plot(dists, simwav)
 	plt.show()
 	
