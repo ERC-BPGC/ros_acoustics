@@ -6,20 +6,20 @@ from rclpy.node import Node
 import numpy as np
 import matplotlib.pyplot as plt
 
-class WaveformClient(Node):
+class AcousticsClient(Node):
 	"""
 	Class that handles sending and receiving requests from the 
 	compute waveforms service
 	"""
-	srv_name = 'compute_waveforms'
+	srv_name = 'acoustics_service'
 	
 	def __init__(self):
-		super().__init__('waveforms_client')
+		super().__init__('acoustics_client_node')
 		self.cli = self.create_client(ComputeWaveforms, self.srv_name)
 		self.get_logger().info('Initiated client.')
 		
 		while not self.cli.wait_for_service(timeout_sec=1.0):
-			self.get_logger().info('Service unavailable, trying again in 1s...')
+			self.get_logger().info('Acoustics service unavailable, trying again in 1s...')
 		
 		self.req = ComputeWaveforms.Request()
 

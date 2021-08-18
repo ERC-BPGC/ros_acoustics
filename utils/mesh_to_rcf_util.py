@@ -3,9 +3,6 @@
 # hack to import ros_acoustics module
 import pathlib
 import sys
-from matplotlib import interactive
-
-from numpy.core.shape_base import block
 parent_dir = pathlib.Path(sys.argv[0]).parent.absolute().parent.absolute().__str__()
 sys.path.append(parent_dir)
 
