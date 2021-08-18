@@ -30,6 +30,7 @@ install(DIRECTORY
 # install python scripts
 set(python_scripts
   ros_acoustics/acoustics_service.py
+  ros_acoustics/odom_subscriber.py
   ros_acoustics/room_publisher.py
   test/test_basic.py
 )

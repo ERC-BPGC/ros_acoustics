@@ -4,7 +4,8 @@
   <name>ros_acoustics</name>
   <version>0.0.0</version>
   <description>A package for quick and simple acoustics simulations for robots</description>
-  <maintainer email="tpb2k99@gmail.com">tanmay</maintainer>
+  <maintainer email="tpb2k99@gmail.com">Tanmay</maintainer>
+  <maintainer email="ashutosh.gupta.070801@gmail.com">Ashutosh</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

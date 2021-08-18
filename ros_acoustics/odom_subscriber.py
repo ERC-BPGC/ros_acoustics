@@ -12,6 +12,7 @@ class OdomSubscriber(Node):
         self.i = 0
 
     def odom_callback(self, msg):
+        # Play with data here
         print('Received odometry message: ' + str(self.i))
         self.i += 1
 
