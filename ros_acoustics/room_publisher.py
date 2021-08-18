@@ -10,14 +10,16 @@ import sys, os
 
 class RoomPublisher(Node):
 	"""Class that publishes the marker for a room"""
-	topic = 'room_marker'
+	# topic = 'room_marker'
 	# path_to_mesh = 'file:///home/tanmay/Projects/ros2_ws2/src/ros_acoustics/test/data/t_pipe.stl'
-	mesh_scale_factor = 1.
 
-	def __init__(self, path_to_mesh):
+	def __init__(self, path_to_mesh, topic='room_marker', scale_factor=1.):
 		super().__init__('room_publisher')
 
 		self.path_to_mesh = path_to_mesh
+		self.topic = topic
+		self.mesh_scale_factor = scale_factor
+
 		self.pub = self.create_publisher(Marker, self.topic, 2)
 		self.marker = self._init_basic_marker()
 		self.marker.mesh_resource = 'file://' + self.path_to_mesh

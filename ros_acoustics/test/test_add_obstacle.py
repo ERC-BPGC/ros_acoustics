@@ -32,7 +32,7 @@ obstacle = ComplexRoom.make_polygon(
 		height=1, 
 		N=4, 
 		rpy=[0,0,0],
-		reverse_normals=True,
+		reverse_normals=False,
 	)
 obstacle.spatial_transform([.4,0,.3])
 print(obstacle.volume)
@@ -53,4 +53,4 @@ plt.show()
 
 # plot rir
 room.plot_rir()
-# plt.show()
+plt.show()

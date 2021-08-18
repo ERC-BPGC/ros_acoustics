@@ -4,15 +4,18 @@ import sys
 parent_dir = pathlib.Path(sys.argv[0]).\
 				parent.absolute().\
 				parent.absolute().\
-				parent.absolute().\
 				__str__()
 sys.path.append(parent_dir)
 
 from ros_acoustics.utils.pra_utils import ComplexRoom
 import matplotlib.pyplot as plt
+import numpy as np
+import argparse
 
-path_to_stl = 'test/data/simple_pipe.stl'
+parser = argparse.ArgumentParser()
+parser.add_argument('rcf', help='File path to room config file')
+args = parser.parse_args()
 
-room = ComplexRoom.from_stl(path_to_stl)
-room.plot(show_normals={'length':.6})
+room = ComplexRoom.from_rcf(args.rcf)
+room.plot()
 plt.show()

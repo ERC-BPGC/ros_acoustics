@@ -4,7 +4,7 @@ Simple test script that tests the functionality of the WaveformClient class
 """
 
 from ros_acoustics.srv import ComputeWaveforms
-from ros_acoustics.waveform_client import WaveformClient
+from ros_acoustics.waveform_client import AcousticsClient
 import rclpy
 from rclpy.node import Node
 import numpy as np
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 def main(args=None):
 	rclpy.init(args=None)
 
-	waveforms_client = WaveformClient()
+	waveforms_client = AcousticsClient()
 
 	source_pos = [3., .15, .15]
 	mic_pos = [3.5, .15, .15]

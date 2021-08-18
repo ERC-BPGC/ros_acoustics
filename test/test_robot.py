@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ros_acoustics.waveform_client import WaveformClient
+from ros_acoustics.waveform_client import AcousticsClient
 import rclpy
 from visualization_msgs.msg import Marker
 import time
@@ -22,7 +22,7 @@ def main(args=None):
 	rm_pub.publish(gen_robot_marker(robot_pos, rm_node.get_clock().now().to_msg()))
 	source_wav = gen_source_wav_demo()
 
-	waveform_client = WaveformClient()
+	waveform_client = AcousticsClient()
 	computed_waveform = waveform_client.get_waveform(
 		source_pos=robot_pos+source_rel_pos,
 		mic_pos=robot_pos+mic_rel_pos,
