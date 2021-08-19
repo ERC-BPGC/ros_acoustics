@@ -14,11 +14,19 @@ def generate_launch_description():
     acoustic_path = get_package_share_directory('ros_acoustics')
     world_path = acoustic_path + '/worlds/t_pipe.world'
     urdf = get_package_share_directory('sprintbot-model') + '/urdf/sprintbot.urdf'
+    y = -5. # TODO: initial coordinates in vars
 
     params = {'robot_description' : open(urdf).read()}
     robot_spawner = Node(package='gazebo_ros',
                         executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description', '-entity', LaunchConfiguration('rb_id'), '-robot_namespace', LaunchConfiguration('rb_id'), '-z','0.11'],
+                        arguments=[
+                            '-topic', 'robot_description', 
+                            '-entity', LaunchConfiguration('rb_id'), 
+                            '-robot_namespace', LaunchConfiguration('rb_id'), 
+                            '-z','0.11',
+                            '-y', str(y),
+                            '-x', '2.3'
+                        ],
                         output='screen')
     robot_state_publisher = Node(package='robot_state_publisher',
                                  executable='robot_state_publisher',
