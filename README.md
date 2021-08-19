@@ -8,7 +8,10 @@
 4. Build these 3 packages using `colcon build`.
 5. Source the workspace: `source install/setup.bash`
 6. Launch: `ros2 launch ros_acoustics gazebo_test_launch.py`. You should be able to see gazebo with a sprintbot and some objects.
-7. Optionally, you can teleop sprintbot by running this in another terminal: `ros2 run key_teleop key_teleop`
+7. In another terminal, get the acoustic waveform by running `ros2 run ros_acoustics basic_test.py`
+8. Optionally, you can teleop sprintbot by running this in another terminal: `ros2 run key_teleop key_teleop`
+
+Note: Make sure gazebo is installed using `sudo apt install ros-foxy-gazebo-ros*`
 
 ## File Description
 

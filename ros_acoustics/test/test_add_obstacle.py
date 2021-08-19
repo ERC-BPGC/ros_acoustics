@@ -13,8 +13,9 @@ sys.path.append(parent_dir)
 from ros_acoustics.utils.pra_utils import ComplexRoom, NormalsType
 import pyroomacoustics as pra
 import matplotlib.pyplot as plt
+import numpy as np
 
-room_material = pra.Material(0.8, None)
+room_material = pra.Material(0.98, None)
 room = ComplexRoom.make_polygon(
 		material=room_material,
 		centre=[0,0,0], 
@@ -26,21 +27,20 @@ room = ComplexRoom.make_polygon(
 	)
 
 obstacle = ComplexRoom.make_polygon(
-		material=room_material,
+		material=pra.Material(0.2, None),
 		centre=[0,0,0], 
 		radius=1, 
 		height=1, 
 		N=4, 
-		rpy=[0,0,0],
+		rpy=[0,0,np.pi/4],
 		reverse_normals=False,
 	)
 obstacle.spatial_transform([.4,0,.3])
-print(obstacle.volume)
-print(room.volume)
+
 room.add_obstacle(obstacle)
 
 source_pos = [1,-1,0.]
-mic_pos = [1, -1, 1]
+mic_pos = [1, -1, .1]
 room.add_source(source_pos)
 room.add_microphone(mic_pos)
 room.compute_rir()
