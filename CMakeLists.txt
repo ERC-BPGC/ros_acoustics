@@ -15,6 +15,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
+find_package(sprintbot-model REQUIRED)
 
 # no build testing yet
 
@@ -24,13 +25,15 @@ ament_python_install_package(${PROJECT_NAME})
 # install launch file
 install(DIRECTORY
   launch
+  worlds
+  data
   DESTINATION share/${PROJECT_NAME}/
 )
 
 # install python scripts
 set(python_scripts
   ros_acoustics/acoustics_service.py
-  ros_acoustics/room_publisher.py
+  test/odom_subscriber.py
   test/test_basic.py
 )
 install(PROGRAMS
@@ -56,9 +59,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 
 # install data files (STLs and RCFs)
-install(
-  DIRECTORY data
-  DESTINATION share/${PROJECT_NAME}/
-)
+# install(
+#   DIRECTORY data
+#   DESTINATION share/${PROJECT_NAME}/
+# )
 
 ament_package()
