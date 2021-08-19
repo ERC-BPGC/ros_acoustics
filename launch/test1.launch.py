@@ -15,6 +15,10 @@ def generate_launch_description():
     world_path = acoustic_path + '/worlds/t_pipe.world'
     urdf = get_package_share_directory('sprintbot-model') + '/urdf/sprintbot.urdf'
 
+    print(gazebo_path)
+    print(acoustic_path)
+    print(world_path)
+
     params = {'robot_description' : open(urdf).read()}
     robot_spawner = Node(package='gazebo_ros',
                         executable='spawn_entity.py',

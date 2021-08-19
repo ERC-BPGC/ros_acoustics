@@ -24,6 +24,7 @@ ament_python_install_package(${PROJECT_NAME})
 # install launch file
 install(DIRECTORY
   launch
+  worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 
