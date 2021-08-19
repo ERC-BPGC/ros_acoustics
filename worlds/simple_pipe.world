@@ -26,7 +26,7 @@
 							<size>2.0 2.0 1.2</size>
 						</box> -->
 						<mesh>
-							<uri>/home/tanmay/Projects/ros_acoustics/data/simple_pipe.stl</uri>
+							<uri>./install/ros_acoustics/share/ros_acoustics/data/simple_pipe.stl</uri>
 							<scale>1 1 1</scale>
 						</mesh>
 					</geometry>

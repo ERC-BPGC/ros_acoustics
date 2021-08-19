@@ -26,14 +26,14 @@ ament_python_install_package(${PROJECT_NAME})
 install(DIRECTORY
   launch
   worlds
+  data
   DESTINATION share/${PROJECT_NAME}/
 )
 
 # install python scripts
 set(python_scripts
   ros_acoustics/acoustics_service.py
-  ros_acoustics/odom_subscriber.py
-  ros_acoustics/room_publisher.py
+  test/odom_subscriber.py
   test/test_basic.py
 )
 install(PROGRAMS
@@ -59,9 +59,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 
 # install data files (STLs and RCFs)
-install(
-  DIRECTORY data
-  DESTINATION share/${PROJECT_NAME}/
-)
+# install(
+#   DIRECTORY data
+#   DESTINATION share/${PROJECT_NAME}/
+# )
 
 ament_package()
