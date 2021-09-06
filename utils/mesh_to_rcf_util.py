@@ -6,7 +6,7 @@ import sys
 parent_dir = pathlib.Path(sys.argv[0]).parent.absolute().parent.absolute().__str__()
 sys.path.append(parent_dir)
 
-from ros_acoustics.utils.pra_utils import ComplexRoom
+from ros_acoustics.pra_utils.complex_room import ComplexRoom
 import pyroomacoustics as pra
 import numpy as np
 import matplotlib.pyplot as plt
