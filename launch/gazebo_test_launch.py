@@ -63,5 +63,5 @@ def generate_launch_description():
 		robot_state_publisher,
 		robot_spawner,
 		acoustic_srv_node,
-		# acoustic_cli_node,
+		acoustic_cli_node,
 	])
