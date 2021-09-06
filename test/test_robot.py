@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ros_acoustics.waveform_client import AcousticsClient
+from ros_acoustics.acoustics_client import AcousticsClient
 import rclpy
 from visualization_msgs.msg import Marker
 import time
