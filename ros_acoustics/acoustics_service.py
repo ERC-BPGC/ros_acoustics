@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from ros_acoustics.srv import ComputeWaveforms
-from ros_acoustics.utils.pra_utils import *
+from ros_acoustics.pra_utils.complex_room import *
 import rclpy
 from rclpy.node import Node
 

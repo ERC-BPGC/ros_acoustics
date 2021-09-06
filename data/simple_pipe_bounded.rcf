@@ -1,0 +1,275 @@
+ray_tracing: true
+air_absorption: null
+max_order: 4
+fs: 8000
+walls:
+- id: 0
+  material:
+    absorption: 0.8999999761581421
+    scattering: null
+  corners:
+  - - 18.0
+    - -3.0
+    - -3.0
+  - - 18.0
+    - -3.0
+    - 5.0
+  - - -3.0
+    - -3.0
+    - 5.0
+  - - -3.0
+    - -3.0
+    - -3.0
+- id: 1
+  material:
+    absorption: 0.8999999761581421
+    scattering: null
+  corners:
+  - - 18.0
+    - 5.0
+    - -3.0
+  - - 18.0
+    - 5.0
+    - 5.0
+  - - 18.0
+    - -3.0
+    - 5.0
+  - - 18.0
+    - -3.0
+    - -3.0
+- id: 2
+  material:
+    absorption: 0.8999999761581421
+    scattering: null
+  corners:
+  - - -3.0
+    - 5.0
+    - -3.0
+  - - -3.0
+    - 5.0
+    - 5.0
+  - - 18.0
+    - 5.0
+    - 5.0
+  - - 18.0
+    - 5.0
+    - -3.0
+- id: 3
+  material:
+    absorption: 0.8999999761581421
+    scattering: null
+  corners:
+  - - -3.0
+    - -3.0
+    - -3.0
+  - - -3.0
+    - -3.0
+    - 5.0
+  - - -3.0
+    - 5.0
+    - 5.0
+  - - -3.0
+    - 5.0
+    - -3.0
+- id: 4
+  material:
+    absorption: 0.8999999761581421
+    scattering: null
+  corners:
+  - - -3.0
+    - 5.0
+    - -3.0
+  - - 18.0
+    - 5.0
+    - -3.0
+  - - 18.0
+    - -3.0
+    - -3.0
+  - - -3.0
+    - -3.0
+    - -3.0
+- id: 5
+  material:
+    absorption: 0.8999999761581421
+    scattering: null
+  corners:
+  - - -3.0
+    - -3.0
+    - 5.0
+  - - 18.0
+    - -3.0
+    - 5.0
+  - - 18.0
+    - 5.0
+    - 5.0
+  - - -3.0
+    - 5.0
+    - 5.0
+- id: 6
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 0.0
+    - 2.0
+  - - 0.0
+    - 0.0
+    - 0.0
+  - - 0.0
+    - 2.0
+    - 0.0
+- id: 7
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 2.0
+    - 2.0
+  - - 0.0
+    - 0.0
+    - 2.0
+  - - 0.0
+    - 2.0
+    - 0.0
+- id: 8
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 15.0
+    - 2.0
+    - 2.0
+  - - 15.0
+    - 2.0
+    - 0.0
+  - - 15.0
+    - 0.0
+    - 0.0
+- id: 9
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 15.0
+    - 0.0
+    - 2.0
+  - - 15.0
+    - 2.0
+    - 2.0
+  - - 15.0
+    - 0.0
+    - 0.0
+- id: 10
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 15.0
+    - 0.0
+    - 2.0
+  - - 15.0
+    - 0.0
+    - 0.0
+  - - 0.0
+    - 0.0
+    - 0.0
+- id: 11
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 0.0
+    - 2.0
+  - - 15.0
+    - 0.0
+    - 2.0
+  - - 0.0
+    - 0.0
+    - 0.0
+- id: 12
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 2.0
+    - 2.0
+  - - 0.0
+    - 2.0
+    - 0.0
+  - - 15.0
+    - 2.0
+    - 0.0
+- id: 13
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 15.0
+    - 2.0
+    - 2.0
+  - - 0.0
+    - 2.0
+    - 2.0
+  - - 15.0
+    - 2.0
+    - 0.0
+- id: 14
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 2.0
+    - 0.0
+  - - 0.0
+    - 0.0
+    - 0.0
+  - - 15.0
+    - 0.0
+    - 0.0
+- id: 15
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 15.0
+    - 2.0
+    - 0.0
+  - - 0.0
+    - 2.0
+    - 0.0
+  - - 15.0
+    - 0.0
+    - 0.0
+- id: 16
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 2.0
+    - 2.0
+  - - 15.0
+    - 2.0
+    - 2.0
+  - - 15.0
+    - 0.0
+    - 2.0
+- id: 17
+  material:
+    absorption: 0.4000000059604645
+    scattering: null
+  corners:
+  - - 0.0
+    - 0.0
+    - 2.0
+  - - 0.0
+    - 2.0
+    - 2.0
+  - - 15.0
+    - 0.0
+    - 2.0

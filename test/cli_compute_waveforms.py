@@ -4,7 +4,7 @@ Simple test script that tests the functionality of the WaveformClient class
 """
 
 from ros_acoustics.srv import ComputeWaveforms
-from ros_acoustics.waveform_client import AcousticsClient
+from ros_acoustics.acoustics_client import AcousticsClient
 import rclpy
 from rclpy.node import Node
 import numpy as np
